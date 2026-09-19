@@ -1,8 +1,5 @@
-# Python
 __pycache__/
 *.pyc
-
-# macOS
 .DS_Store
 
 # Model weights
@@ -12,3 +9,9 @@ __pycache__/
 # Environment
 .env
 .venv/
+
+# Videos
+*.mp4
+
+# Generated output
+output/

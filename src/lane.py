@@ -374,28 +374,38 @@ def pred2coords(
 # ============================================================
 
 def lane_detection(
-    image_path,
+    image_input,
     base_image=None
 ):
 
-    # Read original image
-    original_image = cv2.imread(
-        image_path
-    )
+    # ========================================================
+    # READ IMAGE OR RECEIVE VIDEO FRAME
+    # ========================================================
 
+    if isinstance(image_input, str):
 
-    if original_image is None:
-        raise FileNotFoundError(
-            f"Could not read image: {image_path}"
+        # Image path
+        original_image = cv2.imread(
+            image_input
         )
+
+        if original_image is None:
+            raise FileNotFoundError(
+                f"Could not read image: {image_input}"
+            )
+
+    else:
+
+        # Video frame
+        original_image = image_input.copy()
 
 
     height, width = original_image.shape[:2]
 
 
-    # --------------------------------------------------------
+    # ========================================================
     # PREPROCESS FOR UFLDv2
-    # --------------------------------------------------------
+    # ========================================================
 
     rgb_image = cv2.cvtColor(
         original_image,
@@ -429,9 +439,9 @@ def lane_detection(
     )
 
 
-    # --------------------------------------------------------
+    # ========================================================
     # AI INFERENCE
-    # --------------------------------------------------------
+    # ========================================================
 
     with torch.no_grad():
 
@@ -440,9 +450,9 @@ def lane_detection(
         )
 
 
-    # --------------------------------------------------------
+    # ========================================================
     # DECODE PREDICTIONS
-    # --------------------------------------------------------
+    # ========================================================
 
     lanes = pred2coords(
         prediction,
@@ -451,20 +461,22 @@ def lane_detection(
     )
 
 
-    # --------------------------------------------------------
+    # ========================================================
     # BASE IMAGE
-    # --------------------------------------------------------
+    # ========================================================
 
     if base_image is None:
+
         result = original_image.copy()
 
     else:
+
         result = base_image.copy()
 
 
-    # --------------------------------------------------------
+    # ========================================================
     # DRAW AI-PREDICTED LANES
-    # --------------------------------------------------------
+    # ========================================================
 
     for lane in lanes:
 
