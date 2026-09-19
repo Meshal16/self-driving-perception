@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
+
+# Model weights
+*.pt
+*.pth
+
+# Environment
+.env
+.venv/
